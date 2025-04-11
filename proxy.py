@@ -49,7 +49,6 @@ def working_with_client(client_socket):
                 "Content-Type: text/html; charset=utf-8\r\n"
                 "Connection: close\r\n\r\n"
                 "<h1>403 FORBIDDEN</h1><p>Доступ запрещен</p>"
-                "<h2> Попробуйте удалить из черного списка добавленный адрес</h2>"
             )
             client_socket.sendall(response.encode('utf-8'))
             print(f"{full_url} - 403 Forbidden")
@@ -61,7 +60,7 @@ def working_with_client(client_socket):
 
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.connect((host, port))
-    
+
         new_request = request.replace(
             f"{method} {full_url} {http_version}".encode(),
             f"{method} {path} {http_version}".encode()
@@ -88,7 +87,7 @@ def working_with_client(client_socket):
                     if not data:
                         break
                     client_socket.sendall(data)
-                except:
+                except (socket.error, ConnectionResetError):
                     break
 
     except Exception as e:
